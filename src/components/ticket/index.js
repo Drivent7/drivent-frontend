@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import useTicketType from '../../hooks/api/useTicketType';
-
+import Header from './header';
 export default function Ticket() {
   const { ticketType } = useTicketType();
 
@@ -49,8 +49,3 @@ border: 1px solid #CECECE;
 border-radius: 20px;
 `;
 
-const Header = styled.h1`
-font-family: 'Roboto';
-font-size: 34px;
-margin-bottom:40px;
-`;
