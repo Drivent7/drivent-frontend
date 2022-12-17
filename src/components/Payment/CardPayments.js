@@ -3,14 +3,12 @@ import styled from 'styled-components';
 export default styled.div`
   width: 100%;
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-start;
   margin-top: 0%;
 
   section {
     width: 100%;
-    display: flex;
-    align-items: center;
-
   }
 
   p{

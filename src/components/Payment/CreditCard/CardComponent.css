@@ -1,0 +1,23 @@
+.container {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+  }
+  
+  .formDiv {
+    width: 400px;
+    padding: 20px;
+    border-radius: 10px;
+    -webkit-box-shadow: -1px 8px 15px 0px rgba(0, 0, 0, 0.44);
+    -moz-box-shadow: -1px 8px 15px 0px rgba(0, 0, 0, 0.44);
+    box-shadow: -1px 8px 15px 0px rgba(0, 0, 0, 0.44);
+  }
+  
+  .alert {
+    text-align: center;
+    margin-top: 20px;
+  }
+  
+  .creditCard{
+      margin-bottom: 10%;
+  }
