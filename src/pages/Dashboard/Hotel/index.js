@@ -1,70 +1,42 @@
-import { useEffect, useState } from 'react';
-import instance from '../../../services/api';
 import styled from 'styled-components';
-import { getTicketInfo } from '../../../services/ticektApi';
+import useTicket from '../../../hooks/api/useTicket.js';
 
 export default function Hotel() {
-  const [isPaid, setIsPaid] = useState('');
-  const ticket = {
-    id: 1,
-    ticketTypeId: 2,
-    enrollmentId: 3,
-    status: 'PAID',
-    TicketType: {
-      id: 1,
-      name: 'nomezin',
-      price: 500,
-      isRemote: false,
-      includesHotel: true
-    },
-  };
-
-  // const TicketType = {
-  //   id: 1,
-  //   name: 'nomezin',
-  //   price: 500,
-  //   isRemote: false,
-  //   includesHotel: true
-  // };
-
-  //buscar o isPaid no ticketStatus
-  useEffect(() => {
-    const promise = getTicketInfo()
-      .then(res => {
-        // setIsPaid(res.data.status);
-        console.log('message');
-        console.log(res.data);
-      });
-
-    setIsPaid(false);
-  });
+  const { ticket } = useTicket();
 
   return (
     <>
-      {(ticket.status !== 'PAID') ? (
-        <Wrapper>
-          <MessageWrapper>
-            <p> Você precisa ter confirmado pagamento antes de fazer a escolha de hospedagem </p>
-          </MessageWrapper>
-        </Wrapper>
-
+      {!ticket ? (
+        <>Loading...</>
       ) : (
-
         <>
-          {(ticket.TicketType.includesHotel === true) ? (
+          {(ticket.status !== 'PAID') ? (
             <Wrapper>
               <MessageWrapper>
-                <p> Sua modalidade de ingresso não inclui hospedagem. Prossiga para a escolha de atividades </p>
+                <p> Você precisa ter confirmado pagamento antes de fazer a escolha de hospedagem </p>
               </MessageWrapper>
             </Wrapper>
+
           ) : (
-            <div>
-              bolinha bolinha bolinha bolinha bolinha bolinha
-            </div>
-          )
-          }
+
+            <>
+              {(ticket.TicketType.includesHotel === true) ? (
+                <Wrapper>
+                  <MessageWrapper>
+                    <p> Sua modalidade de ingresso não inclui hospedagem. Prossiga para a escolha de atividades </p>
+                  </MessageWrapper>
+                </Wrapper>
+              ) : (
+                <div>
+                  ACHO Q AQUI ENTRA A PRÓXIMA TAREFA DE APRESENTAR OS HOTÉIS
+                </div>
+              )
+              }
+            </>
+          )}
         </>
       )}
+
     </>
   );
 }

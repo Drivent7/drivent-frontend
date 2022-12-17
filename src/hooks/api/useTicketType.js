@@ -13,8 +13,6 @@ export default function useTicketType() {
     act: getTicketType,
   } = useAsync(() => ticketTypeApi.getTicketTypeInfo(token));
 
-  // console.log(ticketType);
-
   return {
     ticketType,
     ticketTypeLoading,
