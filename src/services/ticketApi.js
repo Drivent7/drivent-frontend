@@ -19,3 +19,13 @@ export async function save(body, token) {
 
   return response.data;
 }
+
+export async function getTicketInfo(token) {
+  const response = await api.get('/tickets', {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+};
+
