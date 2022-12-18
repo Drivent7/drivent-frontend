@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import useTicket from '../../../hooks/api/useTicket.js';
 
+import RoomCard from '../../../components/Rooms/RoomCard.js';
 export default function Hotel() {
   const { ticket } = useTicket();
 
@@ -10,7 +11,7 @@ export default function Hotel() {
         <>Loading...</>
       ) : (
         <>
-          {(ticket.status !== 'PAID') ? (
+          {(ticket.status !== 'RESERVED') ? (
             <Wrapper>
               <MessageWrapper>
                 <p> Você precisa ter confirmado pagamento antes de fazer a escolha de hospedagem </p>
@@ -29,6 +30,13 @@ export default function Hotel() {
               ) : (
                 <div>
                   ACHO Q AQUI ENTRA A PRÓXIMA TAREFA DE APRESENTAR OS HOTÉIS
+                  <RoomWrapper>
+                    <Text>Ótima pedida.Escolha o quarto do hotel!</Text>
+                    <div>
+                      <RoomCard/>
+                    </div>
+                  </RoomWrapper>
+                  <Button>Reservar quarto</Button>
                 </div>
               )
               }
@@ -61,4 +69,32 @@ p{
   text-align: center;
   flex-wrap: wrap;
 }
+`;
+
+const RoomWrapper = styled.div`
+  width: 850px;
+  height: 300px;
+  margin-top: 280px;
+  div{
+    display: flex;
+    flex-wrap:wrap;
+  }
+`;
+
+const Text = styled.p`
+  color: #8e8e8e;
+  font-weight:400;
+  font-size:20px;
+  margin: 20px 0;
+`;
+
+const Button = styled.button`
+  background-color:#E0E0E0;
+  font-size: 20px;
+  font-weight: 400;
+  border: none;
+  width: 200px;
+  height: 40px;
+  border-radius: 5px;
+  margin: 30px 5px;
 `;
