@@ -28,3 +28,13 @@ export async function getTicketInfo(token) {
   return response.data;
 };
 
+export async function postPayment(body, token) {
+  console.log(body);
+  const response = await api.post('/payments/process', body, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  return response.data;
+}
