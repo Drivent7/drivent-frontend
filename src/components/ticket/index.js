@@ -1,11 +1,11 @@
 import styled from 'styled-components';
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import useTicketType from '../../hooks/api/useTicketType';
 import Header from './header';
 import useSaveTicket from '../../hooks/api/useSaveTicket';
 import Button from './Button';
 import { toast } from 'react-toastify';
-import { useContextPayment } from '../Payment/useContextPayment';
+import { useNavigate } from 'react-router-dom';
 
 export default function Ticket() {
   const [selected, setSelected] = useState('white');
@@ -16,7 +16,7 @@ export default function Ticket() {
   const [ticketId, setTicketId] = useState(0);
   const { ticketType } = useTicketType();
   const { saveTicketLoading, saveTicket } = useSaveTicket();
-  const { setPaymentStatement } = useContext(useContextPayment);
+  const navigate = useNavigate();
 
   function changeSelected(price, id) {
     if (selected === 'white') {
@@ -68,8 +68,8 @@ export default function Ticket() {
     const body = { ticketTypeId: ticketId };
     try {
       await saveTicket(body);
-      setPaymentStatement();
       toast('Informações salvas com sucesso!');
+      navigate('/dashboard/cardpayment');
     } catch (err) {
       toast('Não foi possível salvar suas informações!');
     }
