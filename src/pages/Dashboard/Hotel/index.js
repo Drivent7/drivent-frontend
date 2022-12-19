@@ -15,8 +15,9 @@ export default function Hotel() {
     setRoomReserved(false);
   }
 
-  function toggleScreenCancel() {
+  async function roomCancelled(bookingId = 1) {
     setRoomReserved(true);
+    console.log('cancelled');
   }
 
   return (
@@ -25,7 +26,7 @@ export default function Hotel() {
         <>Loading...</>
       ) : (
         <>
-          {(ticket.status !== 'RESERVED') ? (
+          {(ticket.status !== 'PAID') ? (
             <Wrapper>
               <MessageWrapper>
                 <p> Você precisa ter confirmado pagamento antes de fazer a escolha de hospedagem </p>
@@ -75,7 +76,7 @@ export default function Hotel() {
                             <p>Você e mais um</p>
                           </PeopleInTheRoom>
                         </HotelCardResume>
-                        <Button onClick={toggleScreenCancel}>Trocar de quarto</Button>
+                        <Button onClick={roomCancelled}>Trocar de quarto</Button>
                       </>
 
                     </div>
@@ -151,7 +152,7 @@ const HotelCardResume = styled.div`
   width: 300px;
   height: 350px;
   border-radius: 4px;
-  background-color: red;
+  background-color: #FFEED2;
   img {
     border-radius: 4px;
     width: 250px;
