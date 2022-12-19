@@ -3,7 +3,7 @@ import useTicket from '../../../hooks/api/useTicket.js';
 
 export default function Hotel() {
   const { ticket } = useTicket();
-
+  
   return (
     <>
       {!ticket ? (
