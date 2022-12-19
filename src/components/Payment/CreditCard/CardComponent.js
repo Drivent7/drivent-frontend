@@ -1,13 +1,48 @@
 import React from 'react';
 import useForm from './useForm';
-import { Button, Form, Alert, Row, Col } from 'react-bootstrap';
+import { Form, Alert, Row, Col } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './CardComponent.css';
 import Cards from 'react-credit-cards';
 import 'react-credit-cards/es/styles-compiled.css';
+import Buttons from '../../ticket/Button';
+import { useState } from 'react';
+import useTicket from '../../../hooks/api/useTicket';
+import { useNavigate } from 'react-router-dom';
+import usePostPayment from '../../../hooks/api/usePayment';
+
+import { useContext } from 'react';
+import { useContextPayment } from '../useContextPayment';
 
 const CardComponent = () => {
-  const { handleChange, handleFocus, handleSubmit, values, errors } = useForm();
+  const { handleChange, handleFocus, handleSubmit, handleCallback, values, errors } = useForm();
+  const { setFinalPayment } = useContext(useContextPayment);
+  const { ticket } = useTicket();
+  const navigate = useNavigate();
+  const { paymentLoading, paymentAct } = usePostPayment();
+  async function handlePayment() {
+    if (values?.cardExpiration !== '' && values?.cardName !== '' && values?.cardNumber !== '' && values?.cardSecurityCode !== '' && values?.issuer !== '') {
+      const body = {
+        ticketId: ticket?.id,
+        cardData: {
+          issuer: values.issuer,
+          number: values.cardName,
+          name: values.cardName,
+          expirationDate: values.cardExpiration,
+          cvv: values.cardSecurityCode
+        }
+      };
+
+      try {
+        await paymentAct(body);
+        setFinalPayment(true);
+      } catch (err) {
+        console.log(err.message);
+      }
+    }
+  }
+  const [test, setTest] = useState('');
+
   return (
     <div>
       <div className="container">
@@ -20,6 +55,7 @@ const CardComponent = () => {
                 focused={values.focus}
                 name={values.cardName}
                 number={values.cardNumber}
+                callback={handleCallback}
               />
             </div>
             <Form onSubmit={handleSubmit}>
@@ -83,12 +119,18 @@ const CardComponent = () => {
                   </Form.Group>
                 </Col>
               </Row>
-              <Button size={'block'} data-testid="validateButton" id="validateButton" type="submit">
-                Validate
-              </Button>
+              <Buttons onClick={handlePayment} size={'block'} data-testid="validateButton" id="validateButton" type="submit" disable={paymentLoading}>
+                Finalizar Pagamento
+              </Buttons>
             </Form>
           </div>
-          <Alert id="alertMessage" data-testid="alertMessage" variant={errors.variant} show={errors.show}>
+          <Alert
+            id="alertMessage"
+            style={{ marginTop: '-10px', marginLeft: '20px' }}
+            data-testid="alertMessage"
+            variant={errors.variant}
+            show={errors.show}
+          >
             {errors.message}
           </Alert>{' '}
         </div>

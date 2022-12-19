@@ -1,18 +1,28 @@
 import { useState } from 'react';
 import validateInfo from './validateInfo';
+import { useContext } from 'react';
+import { useContextPayment } from '../useContextPayment';
 
 const useForm = () => {
   const [values, setValues] = useState({
     cardName: '',
     cardNumber: '',
-    cardType: '',
     cardExpiration: '',
     cardSecurityCode: '',
-    cardPostalCode: '',
     focus: '',
+    issuer: '',
   });
 
   const [errors, setErrors] = useState({});
+
+  const handleCallback = (_ref, isValid) => {
+    if (isValid) {
+      setValues({
+        ...values,
+        issuer: _ref.issuer,
+      });
+    }
+  };
 
   const handleFocus = (e) => {
     setValues({
@@ -33,8 +43,8 @@ const useForm = () => {
     e.preventDefault();
     setErrors(validateInfo(values));
   };
-
-  return { handleChange, handleFocus, handleSubmit, values, errors };
+ 
+  return { handleChange, handleFocus, handleSubmit, handleCallback, values, errors };
 };
 
 export default useForm;

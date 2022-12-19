@@ -18,12 +18,13 @@ import { useState } from 'react';
 
 export default function App() {
   const [paymentStatement, setPaymentStatement] = useState({});
+  const [finalPayment, setFinalPayment] = useState(false);
   return (
     <>
       <ToastContainer />
       <EventInfoProvider>
         <UserProvider>
-          <useContextPayment.Provider value={{ paymentStatement, setPaymentStatement }}>
+          <useContextPayment.Provider value={{ paymentStatement, setPaymentStatement, finalPayment, setFinalPayment }}>
             <Router>
               <Routes>
                 <Route path="/" element={<Countdown />} />
