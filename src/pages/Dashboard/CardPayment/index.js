@@ -7,7 +7,7 @@ import { useContextPayment } from '../../../components/Payment/useContextPayment
 import image from '../../../assets/images/green.png';
 
 export default function CardPayment() {
-  const { ticket, getTicket } = useTicket();
+  const { ticket } = useTicket();
   const { finalPayment } = useContext(useContextPayment);
   function complement(ticket) {
     if (ticket?.TicketType.name === 'Sem Hotel' || ticket?.TicketType.name === 'Com Hotel') {
