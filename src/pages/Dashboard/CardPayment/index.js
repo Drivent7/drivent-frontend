@@ -15,7 +15,7 @@ export default function CardPayment() {
   // MAS NAO MUDEI ISSO PQ NAO ENTENDI O finalPayment
   const payment = useGetPayment().getPaymentData;
   const { enrollment } = useEnrollment();
-
+  console.log(finalPayment);
   function complement(ticket) {
     if (ticket?.TicketType.name === 'Sem Hotel' || ticket?.TicketType.name === 'Com Hotel') {
       return 'Presencial + ';
