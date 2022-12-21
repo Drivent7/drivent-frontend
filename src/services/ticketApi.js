@@ -10,7 +10,7 @@ export async function getTicketTypeInfo(token) {
 }
 
 export async function save(body, token) {
-  console.log(body);
+  // console.log(body);
   const response = await api.post('/tickets', body, {
     headers: {
       Authorization: `Bearer ${token}`,
