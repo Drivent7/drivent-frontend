@@ -1,31 +1,67 @@
 import styled from 'styled-components';
 import { useState } from 'react';
-import useSaveTicket from '../../hooks/api/useSaveTicket';
-import Button from './Button';
-import { toast } from 'react-toastify';
 import useHotels from '../../hooks/api/useHotels';
 
-export default function Ticket() {
-  const [selected, setSelected] = useState('white');
+export default function Hotels() {
+  const [selected, setSelected] = useState('#CECECE');
   const [hotelId, setHotelId] = useState(0);
   const { hotels } = useHotels();
 
   function changeSelected(id) {
-    if (selected === 'white') {
+    if (selected === '#CECECE') {
       setSelected('#FFEED2');
-    } else {
-      setSelected('white');
     }
     setHotelId(id);
   }
   return (
     <>
-      <Header>Escolha de hotel e quarto</Header>
       <GreyText>Primeiro, escolha seu hotel</GreyText>
       <Row>
-        {hotels?.map(hotel => (
-          <GreyDiv onClick={() => changeSelected(hotel.id)} color={selected} key={hotel.id}> <img src={hotel.image} alt={hotel.name}/>{hotel.name}<GreyText> ..... </GreyText></GreyDiv>
-        ))}
+        {hotels?.map(hotel => {
+          const { Rooms } = hotel;
+          const types = {};
+          let type = '';
+          for (let i = 0; i < Rooms.length; i++) {
+            if(Rooms[i].capacity === 1) {
+              types.single = true;
+            } else if(Rooms[i].capacity === 2) {
+              types.double = true;
+            }  else {
+              types.triple = true;
+            }  
+          }
+          if (types.single && types.double && types.triple) {
+            type = 'Single, Double e Triple';
+          }
+          if (types.single && types.double && !types.triple) {
+            type = 'Single e Double';
+          }
+          if (types.single && !types.double && types.triple) {
+            type = 'Single e Triple';
+          }
+          if (!types.single && types.double && types.triple) {
+            type = 'Double e Triple';
+          }
+          if (types.single && !types.double && !types.triple) {
+            type = 'Single';
+          }
+          if (!types.single && !types.double && types.triple) {
+            type = 'Triple';
+          }
+          if (!types.single && types.double && !types.triple ) {
+            type = 'Double';
+          }
+          return (
+            <GreyDiv onClick={() => changeSelected(hotel.id)} color={selected} selected={hotelId} id={hotel.id} key={hotel.id}> 
+              <img src={hotel.image} alt={hotel.name}/>
+              <h4>{hotel.name}</h4>
+              <h5>Tipos de acomodação:</h5>
+              <h6>{type}</h6>
+              <h5>Vagas disponíveis:</h5>
+            </GreyDiv>
+          );
+        }
+        )}
       </Row>
 
     </>
@@ -52,18 +88,42 @@ box-sizing: border-box;
 margin: 0px 24px 0 0;
 display: flex;
 flex-direction: column;
-justify-content: center;
-width: 145px;
-height: 145px;
-text-align: center;
+justify-content: flex-start;
+align-items: center;
+width: 195px;
+height: 245px;
 
-background-color: ${props => props.color};
+
+background-color: ${props => props.id === props.selected ? props.color : '#CECECE'};
 border: 1px solid #CECECE;
 border-radius: 20px;
+
+img{
+  width: 170px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 15px;
+  margin-bottom: 10px;
+  margin-top: 10px
+}
+h4{
+  font-family: 'Lexend Deca';
+  font-size: 16px;
+  width: 170px;
+  margin-bottom: 5px;
+}
+h5{
+  font-family: 'Lexend Deca';
+  margin-top: 7px;
+  font-size: 12px;
+  width: 170px;
+  font-weight: bold;
+}
+h6{
+  font-family: 'Lexend Deca';
+  margin-top: 5px;
+  font-size: 11.5px;
+  width: 170px;
+}
 `;
 
-const Header = styled.h1`
-font-family: 'Roboto';
-font-size: 34px;
-margin-bottom:40px;
-`;

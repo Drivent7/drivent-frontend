@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import useTicket from '../../../hooks/api/useTicket.js';
-
+import Hotels from '../../../components/Hotel/index.js';
 import RoomCard from '../../../components/Rooms/RoomCard.js';
 import HotelHeader from '../../../components/HeaderHotels.js';
 import { useState } from 'react';
@@ -17,7 +17,6 @@ export default function Hotel() {
 
   async function roomCancelled(bookingId = 1) {
     setRoomReserved(true);
-    console.log('cancelled');
   }
 
   return (
@@ -45,10 +44,12 @@ export default function Hotel() {
               ) : (
 
                 <>
+
+                  <HotelHeader/>
+                  <Hotels />
+
                   {(roomReserved) ? (
                     <div>
-                      <HotelHeader/>
-                      ACHO Q AQUI ENTRA A PRÓXIMA TAREFA DE APRESENTAR OS HOTÉIS
                       <RoomWrapper>
                         <Text>Ótima pedida.Escolha o quarto do hotel!</Text>
                         <div>
@@ -60,10 +61,10 @@ export default function Hotel() {
                   ) : (
                     <div>
                       <>
-                        <HotelHeader/>
+                        
                         <Text>Você já escolheu seu Quarto:</Text>
                         <HotelCardResume>
-                          <img src={hotel1}/>
+                          <img src={hotel1} alt={hotel1}/>
                           <HotelTitle>
                             <h4>Driven Resort</h4>
                           </HotelTitle> 
