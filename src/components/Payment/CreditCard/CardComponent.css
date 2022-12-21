@@ -1,0 +1,24 @@
+.container {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+  }
+  
+  .formDiv {
+    width: 400px;
+    padding: 20px;
+    border-radius: 10px;
+    
+  }
+  
+  .alert {
+    text-align: center;
+    margin-top: 20px;
+    width: 90%;
+  }
+  
+  .creditCard{
+      margin-top: -5%;
+      margin-bottom: 5%;
+      margin-left: -18%;
+  }
