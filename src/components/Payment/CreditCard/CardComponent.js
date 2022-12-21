@@ -6,9 +6,7 @@ import './CardComponent.css';
 import Cards from 'react-credit-cards';
 import 'react-credit-cards/es/styles-compiled.css';
 import Buttons from '../../ticket/Button';
-import { useState } from 'react';
 import useTicket from '../../../hooks/api/useTicket';
-import { useNavigate } from 'react-router-dom';
 import usePostPayment from '../../../hooks/api/usePayment';
 
 import { useContext } from 'react';
@@ -16,9 +14,8 @@ import { useContextPayment } from '../useContextPayment';
 
 const CardComponent = () => {
   const { handleChange, handleFocus, handleSubmit, handleCallback, values, errors } = useForm();
-  const { setFinalPayment } = useContext(useContextPayment);
+  const { setFinalPayment, setTicketId } = useContext(useContextPayment);
   const { ticket } = useTicket();
-  const navigate = useNavigate();
   const { paymentLoading, paymentAct } = usePostPayment();
   async function handlePayment() {
     if (values?.cardExpiration !== '' && values?.cardName !== '' && values?.cardNumber !== '' && values?.cardSecurityCode !== '' && values?.issuer !== '') {
@@ -26,13 +23,12 @@ const CardComponent = () => {
         ticketId: ticket?.id,
         cardData: {
           issuer: values.issuer,
-          number: values.cardName,
+          number: values.cardNumber,
           name: values.cardName,
           expirationDate: values.cardExpiration,
           cvv: values.cardSecurityCode
         }
       };
-
       try {
         await paymentAct(body);
         setFinalPayment(true);
@@ -41,7 +37,6 @@ const CardComponent = () => {
       }
     }
   }
-  const [test, setTest] = useState('');
 
   return (
     <div>
