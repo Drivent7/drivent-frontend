@@ -34,7 +34,7 @@ export default function Hotel() {
             </Wrapper>
           ) : (
             <>
-              {ticket.TicketType.includesHotel === true ? (
+              {ticket.TicketType.includesHotel !== true ? (
                 <Wrapper>
                   <MessageWrapper>
                     <p> Sua modalidade de ingresso não inclui hospedagem. Prossiga para a escolha de atividades </p>
