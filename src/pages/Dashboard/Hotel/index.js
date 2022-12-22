@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import useTicket from '../../../hooks/api/useTicket.js';
-
+import Hotels from '../../../components/Hotel/index.js';
 import RoomCard from '../../../components/Rooms/RoomCard.js';
 import HotelHeader from '../../../components/HeaderHotels.js';
 import { useState } from 'react';
@@ -17,7 +17,6 @@ export default function Hotel() {
 
   async function roomCancelled(bookingId = 1) {
     setRoomReserved(true);
-    console.log('cancelled');
   }
 
   return (
@@ -51,27 +50,43 @@ export default function Hotel() {
                   <Button onClick={toggleScreen}>Reservar quarto</Button>
                 </div>
               ) : (
-                <div>
-                  <>
-                    <HotelHeader />
-                    <Text>Você já escolheu seu Quarto:</Text>
-                    <HotelCardResume>
-                      <img src={hotel1} />
-                      <HotelTitle>
-                        <h4>Driven Resort</h4>
-                      </HotelTitle>
-                      <RoomReserved>
-                        <h4>Quarto reservado</h4>
-                        <p>101 Double</p>
-                      </RoomReserved>
-                      <PeopleInTheRoom>
-                        <h4>Pessoas no seu quarto</h4>
-                        <p>Você e mais um</p>
-                      </PeopleInTheRoom>
-                    </HotelCardResume>
-                    <Button onClick={roomCancelled}>Trocar de quarto</Button>
-                  </>
-                </div>
+                <>
+                  <HotelHeader />
+                  <Hotels />
+
+                  {roomReserved ? (
+                    <div>
+                      <RoomWrapper>
+                        <Text>Ótima pedida.Escolha o quarto do hotel!</Text>
+                        <div>
+                          <RoomCard />
+                        </div>
+                      </RoomWrapper>
+                      <Button onClick={toggleScreen}>Reservar quarto</Button>
+                    </div>
+                  ) : (
+                    <div>
+                      <>
+                        <Text>Você já escolheu seu Quarto:</Text>
+                        <HotelCardResume>
+                          <img src={hotel1} alt={hotel1} />
+                          <HotelTitle>
+                            <h4>Driven Resort</h4>
+                          </HotelTitle>
+                          <RoomReserved>
+                            <h4>Quarto reservado</h4>
+                            <p>101 Double</p>
+                          </RoomReserved>
+                          <PeopleInTheRoom>
+                            <h4>Pessoas no seu quarto</h4>
+                            <p>Você e mais um</p>
+                          </PeopleInTheRoom>
+                        </HotelCardResume>
+                        <Button onClick={roomCancelled}>Trocar de quarto</Button>
+                      </>
+                    </div>
+                  )}
+                </>
               )}
             </>
           )}
