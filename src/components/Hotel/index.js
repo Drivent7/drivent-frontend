@@ -14,7 +14,6 @@ export default function Hotels() {
     }
     setHotelId(id);
   }
-  // console.log('🚀🚀🚀 ~ file: index.js:9 ~ Hotels ~ hotelId', hotelId);
 
   return (
     <>

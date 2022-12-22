@@ -6,10 +6,56 @@ import HotelHeader from '../../../components/HeaderHotels.js';
 import { useState } from 'react';
 
 import hotel1 from '../../../assets/images/hotel1.jpg';
+import useBooking from '../../../hooks/api/useBooking.js';
+import useHotels from '../../../hooks/api/useHotels.js';
+import useGetRooms from '../../../hooks/api/useRoom.js';
+import useToken from '../../../hooks/useToken.js';
+import { getHotelRooms } from '../../../services/hotelApi.js';
+import { useEffect } from 'react';
+import useAllBookings from '../../../hooks/api/useAllBookings.js';
+import { getBookings } from '../../../services/bookingApi.js';
 
 export default function Hotel() {
-  const { ticket } = useTicket();
   const [roomReserved, setRoomReserved] = useState(false);
+  const [roomType, setRoomType] = useState('');
+  const [hotel, setHotel] = useState();
+  const [reserves, setReserves] = useState();
+  const [inRoom, setInRoom] = useState('');
+
+  const { ticket } = useTicket();
+  const { Booking } = useBooking();
+  const token = useToken();
+
+  useEffect(() => {
+    if (Booking) {
+      if (Booking.Room.capacity === 1) {
+        setRoomType('Single');
+      } else if (Booking.Room.capacity === 2) {
+        setRoomType('Double');
+      } else {
+        setRoomType('Triple');
+      }
+
+      const promise = getBookings(token, Booking.Room.id)
+        .then((res) => {
+          setReserves(res);
+          if (res.length === 1) {
+            setInRoom('está sozinho.');
+          } else if (res.length === 2) {
+            setInRoom('e mais um');
+          } else {
+            setInRoom('e mais dois');
+          }
+        })
+        .catch((r) => {});
+
+      const result = getHotelRooms(token, Booking.Room.hotelId)
+        .then((r) => {
+          setHotel(r);
+        })
+        .catch((r) => {});
+    }
+  }, [Booking, roomReserved]);
 
   function toggleScreen() {
     setRoomReserved(false);
@@ -37,55 +83,41 @@ export default function Hotel() {
             </Wrapper>
           ) : (
             <>
-              {roomReserved ? (
+              {Booking ? (
                 <div>
-                  <HotelHeader />
-                  ACHO Q AQUI ENTRA A PRÓXIMA TAREFA DE APRESENTAR OS HOTÉIS
-                  <RoomWrapper>
-                    <Text>Ótima pedida.Escolha o quarto do hotel!</Text>
-                    <div>
-                      <RoomCard />
-                    </div>
-                  </RoomWrapper>
-                  <Button onClick={toggleScreen}>Reservar quarto</Button>
+                  <Text>Você já escolheu seu Quarto:</Text>
+                  <HotelCardResume>
+                    <img src={hotel?.image} alt={hotel?.name} />
+                    <HotelTitle>
+                      <h4>{hotel?.name}</h4>
+                    </HotelTitle>
+                    <RoomReserved>
+                      <h4>Quarto reservado</h4>
+                      <p>
+                        {Booking?.Room.name}, {roomType}
+                      </p>
+                    </RoomReserved>
+                    <PeopleInTheRoom>
+                      <h4>Pessoas no seu quarto</h4>
+                      <p>Você {inRoom}</p>
+                    </PeopleInTheRoom>
+                  </HotelCardResume>
+                  <Button onClick={roomCancelled}>Trocar de quarto</Button>
                 </div>
               ) : (
                 <>
                   <HotelHeader />
                   <Hotels />
 
-                  {!roomReserved ? (
-                    <div>
-                      <RoomWrapper>
-                        <Text>Ótima pedida.Escolha o quarto do hotel!</Text>
-                        <div>
-                          <RoomCard />
-                        </div>
-                      </RoomWrapper>
-                      <Button onClick={toggleScreen}>Reservar quarto</Button>
-                    </div>
-                  ) : (
-                    <div>
-                      <>
-                        <Text>Você já escolheu seu Quarto:</Text>
-                        <HotelCardResume>
-                          <img src={hotel1} alt={hotel1} />
-                          <HotelTitle>
-                            <h4>Driven Resort</h4>
-                          </HotelTitle>
-                          <RoomReserved>
-                            <h4>Quarto reservado</h4>
-                            <p>101 Double</p>
-                          </RoomReserved>
-                          <PeopleInTheRoom>
-                            <h4>Pessoas no seu quarto</h4>
-                            <p>Você e mais um</p>
-                          </PeopleInTheRoom>
-                        </HotelCardResume>
-                        <Button onClick={roomCancelled}>Trocar de quarto</Button>
-                      </>
-                    </div>
-                  )}
+                  <div>
+                    <RoomWrapper>
+                      <Text>Ótima pedida.Escolha o quarto do hotel!</Text>
+                      <div>
+                        <RoomCard />
+                      </div>
+                    </RoomWrapper>
+                    <Button onClick={toggleScreen}>Reservar quarto</Button>
+                  </div>
                 </>
               )}
             </>
@@ -121,7 +153,7 @@ const MessageWrapper = styled.div`
 const RoomWrapper = styled.div`
   width: 850px;
   height: 300px;
-  margin-top:50px;
+  margin-top: 50px;
   div {
     display: flex;
     flex-wrap: wrap;
