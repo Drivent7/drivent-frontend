@@ -19,9 +19,14 @@ export default function Hotels() {
       <Row>
         {hotels?.map(hotel => {
           const { Rooms } = hotel;
+          let bookingCount = 0;
+          let totalCapacity = 0;
           const types = {};
           let type = '';
           for (let i = 0; i < Rooms.length; i++) {
+            const { Booking } = Rooms[i];
+            totalCapacity += Rooms[i].capacity;
+            bookingCount += Booking.length;
             if(Rooms[i].capacity === 1) {
               types.single = true;
             } else if(Rooms[i].capacity === 2) {
@@ -30,6 +35,7 @@ export default function Hotels() {
               types.triple = true;
             }  
           }
+          const available = totalCapacity - bookingCount;
           if (types.single && types.double && types.triple) {
             type = 'Single, Double e Triple';
           }
@@ -58,6 +64,7 @@ export default function Hotels() {
               <h5>Tipos de acomodação:</h5>
               <h6>{type}</h6>
               <h5>Vagas disponíveis:</h5>
+              <h6>{available}</h6>
             </GreyDiv>
           );
         }
