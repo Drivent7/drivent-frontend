@@ -1,54 +1,61 @@
+import { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
-import roomsData from './roomData.js';
+import useGetRooms from '../../hooks/api/useRoom.js';
+import useToken from '../../hooks/useToken.js';
+import { getHotelRooms } from '../../services/hotelApi.js';
+import { useContextPayment } from '../Payment/useContextPayment.js';
 
 export default function RoomCard() {
-  return (
-    <Room/>
-  );
-};
+  return <Room />;
+}
 
 function Room() {
-  const roomData = roomsData[0].rooms.map(element => element);
-  console.log(roomData.map(element => element.number));
-  const roomDataCapacity = roomData.map(element => element.capacity);
-  console.log(roomDataCapacity);
+  const [roomData, setRoomData] = useState([]);
+  const token = useToken();
+  let { hotelId } = useContext(useContextPayment);
+  useEffect(() => {
+    const result = getHotelRooms(token, hotelId)
+      .then((r) => {
+        setRoomData(r);
+      })
+      .catch((r) => {});
+  }, [hotelId]);
 
-  return(
+  return (
     <>
-      {roomData.map((element) => {
-        return(
+      {roomData.Rooms?.map((element) => {
+        return (
           <RoomUnit>
             <RoomNumber>{element.number}</RoomNumber>
             <RoomVacancy>
-              {(element.capacity===1)?(
+              {element.capacity === 1 ? (
                 <>
                   <ion-icon name="person"></ion-icon>
                 </>
-              ):((element.capacity===2)?(
+              ) : element.capacity === 2 ? (
                 <>
                   <ion-icon name="person"></ion-icon>
                   <ion-icon name="person"></ion-icon>
                 </>
-              ):(
+              ) : (
                 <>
                   <ion-icon name="person"></ion-icon>
                   <ion-icon name="person"></ion-icon>
                   <ion-icon name="person"></ion-icon>
                 </>
-               
-              ))}
+              )}
             </RoomVacancy>
           </RoomUnit>
         );
       })}
     </>
   );
-};
+}
 const RoomUnit = styled.div`
   display: flex;
-  justify-content:space-between;
+  justify-content: space-between;
   padding: 0 10px;
-  width:200px;
+  width: 200px;
   height: 50px;
   border: 1px solid #000;
   border-radius: 5px;
@@ -66,7 +73,7 @@ const RoomVacancy = styled.div`
   display: flex;
   align-items: center;
   padding: 0 5px;
-  ion-icon{
+  ion-icon {
     font-size: 30px;
   }
 `;
