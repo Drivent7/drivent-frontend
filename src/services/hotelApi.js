@@ -7,7 +7,7 @@ export async function getHotelInfo(token) {
     },
   });
   return response.data;
-};
+}
 
 export async function getHotelRooms(token, hotelId) {
   const response = await api.get(`/hotels/${hotelId}`, {
@@ -15,5 +15,6 @@ export async function getHotelRooms(token, hotelId) {
       Authorization: `Bearer ${token}`,
     },
   });
+
   return response.data;
-};
+}

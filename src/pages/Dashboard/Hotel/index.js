@@ -54,7 +54,7 @@ export default function Hotel() {
                   <HotelHeader />
                   <Hotels />
 
-                  {roomReserved ? (
+                  {!roomReserved ? (
                     <div>
                       <RoomWrapper>
                         <Text>Ótima pedida.Escolha o quarto do hotel!</Text>
@@ -121,7 +121,7 @@ const MessageWrapper = styled.div`
 const RoomWrapper = styled.div`
   width: 850px;
   height: 300px;
-  margin-top: 280px;
+  margin-top:50px;
   div {
     display: flex;
     flex-wrap: wrap;
