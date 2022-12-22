@@ -39,7 +39,7 @@ export default function Ticket() {
 
   function choseHotel(room) {
     if (room) {
-      setTotal(ticketPrice+roomPrice);
+      setTotal(ticketPrice + roomPrice);
     } else {
       setTotal(ticketPrice);
     }
@@ -64,10 +64,11 @@ export default function Ticket() {
       <GreyText>Primeiro, escolha sua modalidade de ingresso</GreyText>
       <Row>
         {ticketType?.map(type => (
-          <TicketCard key={type.id} onClick={() => changeSelected(type.name, type.price, type.id, type.isRemote)} color={selected === type.name ? '#FFEED2' : 'white'}>
-            {type.name}
-            <GreyText>R$ {type.price}</GreyText>
-          </TicketCard>
+          type.name === 'Online' || type.name === 'Presencial' ?
+            <TicketCard key={type.id} onClick={() => changeSelected(type.name, type.price, type.id, type.isRemote)} color={selected === type.name ? '#FFEED2' : 'white'}>
+              {type.name}
+              <GreyText>R$ {type.price}</GreyText>
+            </TicketCard> : ''
         ))}
       </Row>
       {presential ?
