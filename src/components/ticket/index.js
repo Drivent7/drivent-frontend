@@ -1,11 +1,15 @@
 import styled from 'styled-components';
 import { useState } from 'react';
 import useTicketType from '../../hooks/api/useTicketType';
+import Header from './header';
 import useSaveTicket from '../../hooks/api/useSaveTicket';
 import Button from './Button';
 import { toast } from 'react-toastify';
 import { GreyText } from './GreyText';
 import { TicketCard } from './TicketCard';
+import useGetPayment from '../../hooks/api/useGetPayment';
+import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 
 export default function Ticket() {
   const [confirm, setConfirm] = useState(false);
@@ -18,6 +22,11 @@ export default function Ticket() {
   const [ticketId, setTicketId] = useState(0);
   const { ticketType } = useTicketType();
   const { saveTicketLoading, saveTicket } = useSaveTicket();
+  const navigate = useNavigate();
+  const { getPaymentData } = useGetPayment();
+
+  useEffect(() => {
+  }, [getPaymentData]);
 
   function changeSelected(name, price, id, isRemote) {
     if (isRemote) {
@@ -53,6 +62,7 @@ export default function Ticket() {
     try {
       await saveTicket(body);
       toast('Informações salvas com sucesso!');
+      navigate('/dashboard/cardpayment');
     } catch (err) {
       toast('Não foi possível salvar suas informações!');
     }
@@ -100,13 +110,7 @@ export default function Ticket() {
 }
 
 const Row = styled.div`
-display: flex;
-flex-direction: row;
-margin: 10px 0 30px;
-`;
-
-const Header = styled.h1`
-font-family: 'Roboto';
-font-size: 34px;
-margin-bottom:40px;
+  display: flex;
+  flex-direction: row;
+  margin: 10px 0 30px;
 `;
