@@ -22,12 +22,26 @@ export default function App() {
   const [finalPayment, setFinalPayment] = useState(false);
   const [ticket, setTicket] = useState('');
   const [hotelId, setHotelId] = useState(0);
+  const [roomId, setRoomId] = useState(0);
   return (
     <>
       <ToastContainer />
       <EventInfoProvider>
         <UserProvider>
-          <useContextPayment.Provider value={{ paymentStatement, setPaymentStatement, finalPayment, setFinalPayment, setTicket, ticket, hotelId, setHotelId }}>
+          <useContextPayment.Provider
+            value={{
+              paymentStatement,
+              setPaymentStatement,
+              finalPayment,
+              setFinalPayment,
+              setTicket,
+              ticket,
+              hotelId,
+              setHotelId,
+              roomId,
+              setRoomId
+            }}
+          >
             <Router>
               <Routes>
                 <Route path="/" element={<Countdown />} />
