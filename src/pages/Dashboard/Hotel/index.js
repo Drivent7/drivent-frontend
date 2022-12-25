@@ -5,14 +5,10 @@ import RoomCard from '../../../components/Rooms/RoomCard.js';
 import HotelHeader from '../../../components/HeaderHotels.js';
 import { useState } from 'react';
 
-import hotel1 from '../../../assets/images/hotel1.jpg';
 import useBooking from '../../../hooks/api/useBooking.js';
-import useHotels from '../../../hooks/api/useHotels.js';
-import useGetRooms from '../../../hooks/api/useRoom.js';
 import useToken from '../../../hooks/useToken.js';
 import { getHotelRooms } from '../../../services/hotelApi.js';
 import { useEffect } from 'react';
-import useAllBookings from '../../../hooks/api/useAllBookings.js';
 import { getBookings } from '../../../services/bookingApi.js';
 
 export default function Hotel() {
