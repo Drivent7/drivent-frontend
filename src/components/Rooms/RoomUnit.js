@@ -2,10 +2,14 @@ import { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import useToken from '../../hooks/useToken.js';
 import { useContextPayment } from '../Payment/useContextPayment.js';
+import Icon from './Icon.js';
 
 export default function RoomUnit(room) {
   const token = useToken();
   const [selected, setSelected] = useState('#CECECE');
+  const [selectedIcon, setSelectedIcon] = useState('#000');
+  const [clicked, setClicked] = useState(false);
+
   const { roomId, setRoomId } = useContext(useContextPayment);
 
   function changeSelected(id) {
@@ -13,31 +17,33 @@ export default function RoomUnit(room) {
       setSelected('#FFEED2');
     }
     setRoomId(id);
+    console.log(clicked);
   }
 
   return (
-    <RoomUnitWrapper 
-      onClick = {() => changeSelected(room.room.id)} 
-      color = {selected} 
-      selected = {roomId} 
-      id = {room.room.id}
+    <RoomUnitWrapper
+      onClick={() => {
+        changeSelected(room.room.id);
+        setClicked(!clicked);
+      }}
+      color={selected}
+      selected={roomId}
+      id={room.room.id}
     >
       <RoomNumber>{room.room.name}</RoomNumber>
       <RoomVacancy>
         {room.room.capacity === 1 ? (
-          <>
-            <ion-icon name="person"></ion-icon>
-          </>
+          <Icon color={selected} clicked={clicked} />
         ) : room.room.capacity === 2 ? (
           <>
-            <ion-icon name="person"></ion-icon>
-            <ion-icon name="person"></ion-icon>
+            <Icon color={selected} clicked={clicked} />
+            <Icon />
           </>
         ) : (
           <>
-            <ion-icon name="person"></ion-icon>
-            <ion-icon name="person"></ion-icon>
-            <ion-icon name="person"></ion-icon>
+            <Icon color={selected} clicked={clicked} />
+            <Icon />
+            <Icon />
           </>
         )}
       </RoomVacancy>
