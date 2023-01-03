@@ -5,73 +5,60 @@ import Header from './header';
 import useSaveTicket from '../../hooks/api/useSaveTicket';
 import Button from './Button';
 import { toast } from 'react-toastify';
-import { useNavigate } from 'react-router-dom';
+import { GreyText } from './GreyText';
+import { TicketCard } from './TicketCard';
 import useGetPayment from '../../hooks/api/useGetPayment';
+import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
-import { useContext } from 'react';
-import UserContext from '../../contexts/UserContext';
+
 export default function Ticket() {
-  const { getPaymentData } = useGetPayment();
-  const [selected, setSelected] = useState('white');
-  const [selected2, setSelected2] = useState('white');
-  const [selected3, setSelected3] = useState('white');
-  const [selected4, setSelected4] = useState('white');
+  const [confirm, setConfirm] = useState(false);
+  const [presential, setPresential] = useState(false);
+  const [roomPrice, setRoomPrice] = useState(false);
+  const [ticketPrice, setTicketPrice] = useState(false);
+  const [room, setRoom] = useState(false);
+  const [selected, setSelected] = useState('');
   const [total, setTotal] = useState(0);
   const [ticketId, setTicketId] = useState(0);
   const { ticketType } = useTicketType();
   const { saveTicketLoading, saveTicket } = useSaveTicket();
   const navigate = useNavigate();
+  const { getPaymentData } = useGetPayment();
+
   useEffect(() => {
   }, [getPaymentData]);
 
-  function changeSelected(price, id) {
-    if (selected === 'white') {
-      setSelected('#FFEED2');
-      setSelected2('white');
+  function changeSelected(name, price, id, isRemote) {
+    if (isRemote) {
+      setConfirm(true);
+      setPresential(false);
     } else {
-      setSelected('white');
+      setPresential(true);
+      setRoomPrice(ticketType[2].price - ticketType[1].price);
     }
+    if (confirm && selected !== name) {
+      setConfirm(false);
+    }
+
+    setSelected(name);
+    setTicketPrice(price);
     setTotal(price);
     setTicketId(id);
   }
 
-  function changeSelected2(price, id) {
-    if (selected2 === 'white') {
-      setSelected2('#FFEED2');
-      setSelected('white');
+  function choseHotel(room) {
+    if (room) {
+      setTotal(ticketPrice + roomPrice);
     } else {
-      setSelected2('white');
+      setTotal(ticketPrice);
     }
-    setTotal(price);
-    setTicketId(id);
-  }
-
-  function changeSelected3(price, id) {
-    if (selected3 === 'white') {
-      setSelected3('#FFEED2');
-      setSelected4('white');
-      setSelected('white');
-    } else {
-      setSelected3('white');
-    }
-    setTotal(price);
-    setTicketId(id);
-  }
-
-  function changeSelected4(price, id) {
-    if (selected4 === 'white') {
-      setSelected4('#FFEED2');
-      setSelected3('white');
-      setSelected('white');
-    } else {
-      setSelected4('white');
-    }
-    setTotal(price);
-    setTicketId(id);
+    setRoom(room);
+    setConfirm(true);
   }
 
   async function sendInfo() {
     const body = { ticketTypeId: ticketId };
+
     try {
       await saveTicket(body);
       toast('Informações salvas com sucesso!');
@@ -83,81 +70,41 @@ export default function Ticket() {
 
   return (
     <>
-      {getPaymentData ? (
-        navigate('/dashboard/cardpaymentpaid')
-      ) : (
+      <Header>Ingresso e pagamento</Header>
+      <GreyText>Primeiro, escolha sua modalidade de ingresso</GreyText>
+      <Row>
+        {ticketType?.map(type => (
+          type.name === 'Online' || type.name === 'Presencial' ?
+            <TicketCard key={type.id} onClick={() => changeSelected(type.name, type.price, type.id, type.isRemote)} color={selected === type.name ? '#FFEED2' : 'white'}>
+              {type.name}
+              <GreyText>R$ {type.price}</GreyText>
+            </TicketCard> : ''
+        ))}
+      </Row>
+      {presential ?
         <>
-          <Header>Ingresso e pagamento</Header>
-          <GreyText>Primeiro, escolha sua modalidade de ingresso</GreyText>
+          <GreyText>Ótimo! Agora escolha sua modalidade de hospedagem</GreyText>
           <Row>
-            {ticketType?.map((type) => {
-              if (type.isRemote) {
-                return (
-                  <GreyDiv onClick={() => changeSelected(type.price, type.id)} color={selected} key={type.id}>
-                    {type.name}
-                    <GreyText>R$ {type.price}</GreyText>
-                  </GreyDiv>
-                );
-              }
-              if (!type.isRemote && type.name === 'Presencial') {
-                return (
-                  <GreyDiv onClick={() => changeSelected2(type.price, type.id)} color={selected2} key={type.id}>
-                    {type.name}
-                    <GreyText>R$ {type.price}</GreyText>
-                  </GreyDiv>
-                );
-              }
-            })}
+            <TicketCard onClick={() => choseHotel(false)} color={room ? 'white' : '#FFEED2'}>
+              Sem Hotel
+              <GreyText>+ R$ 0</GreyText>
+            </TicketCard>
+            <TicketCard onClick={() => choseHotel(true)} color={room ? '#FFEED2' : 'white'}>
+              Com Hotel
+              <GreyText>+ R$ {roomPrice}</GreyText>
+            </TicketCard>
           </Row>
-          {selected === '#FFEED2' ? (
-            <>
-              <GreyText>
-                Fechado! O total ficou em <strong>R$ {total}</strong>. Agora é só confirmar:
-              </GreyText>
-              <Button onClick={() => sendInfo()} disabled={saveTicketLoading}>
-                RESERVAR INGRESSO
-              </Button>
-            </>
-          ) : (
-            ''
-          )}
-          {selected2 === '#FFEED2' ? (
-            <>
-              <Row>
-                {ticketType?.map((type) => {
-                  if (type.name === 'Com Hotel') {
-                    return (
-                      <GreyDiv onClick={() => changeSelected3(type.price, type.id)} color={selected3} key={type.id}>
-                        {type.name}
-                        <GreyText>R$ {type.price}</GreyText>
-                      </GreyDiv>
-                    );
-                  }
-                })}
-
-                {ticketType?.map((type) => {
-                  if (type.name === 'Sem Hotel') {
-                    return (
-                      <GreyDiv onClick={() => changeSelected4(type.price, type.id)} color={selected4} key={type.id}>
-                        {type.name}
-                        <GreyText>R$ {type.price}</GreyText>
-                      </GreyDiv>
-                    );
-                  }
-                })}
-              </Row>
-              <GreyText>
-                Fechado! O total ficou em <strong>R$ {total}</strong>. Agora é só confirmar:
-              </GreyText>
-              <Button onClick={() => sendInfo()} disabled={saveTicketLoading}>
-                RESERVAR INGRESSO
-              </Button>
-            </>
-          ) : (
-            ''
-          )}
         </>
-      )}
+        : ''}
+      {confirm ?
+        <>
+          <GreyText>Fechado! O total ficou em <strong>R$ {total}</strong>. Agora é só confirmar:</GreyText>
+          <Button onClick={() => sendInfo()} disabled={saveTicketLoading}>
+            RESERVAR INGRESSO
+          </Button>
+        </>
+        : ''}
+
     </>
   );
 }
@@ -166,27 +113,4 @@ const Row = styled.div`
   display: flex;
   flex-direction: row;
   margin: 10px 0 30px;
-`;
-
-const GreyText = styled.p`
-  margin: 5px 0px;
-  font-family: 'Roboto';
-  color: #8e8e8e;
-`;
-
-const GreyDiv = styled.div`
-  font-family: 'Roboto';
-  box-sizing: border-box;
-
-  margin: 0px 24px 0 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  width: 145px;
-  height: 145px;
-  text-align: center;
-
-  background-color: ${(props) => props.color};
-  border: 1px solid #cecece;
-  border-radius: 20px;
 `;
