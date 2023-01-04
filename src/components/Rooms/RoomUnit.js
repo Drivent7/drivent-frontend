@@ -1,3 +1,4 @@
+import { roundToNearestMinutesWithOptions } from 'date-fns/fp';
 import { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import useToken from '../../hooks/useToken.js';
@@ -30,22 +31,10 @@ export default function RoomUnit(room) {
       selected={roomId}
       id={room.room.id}
     >
-      <RoomNumber>{room.room.name}</RoomNumber>
+      <RoomNumber>{room.room.capacity}</RoomNumber>
       <RoomVacancy>
-        {room.room.capacity === 1 ? (
-          <Icon color={selected} clicked={clicked} />
-        ) : room.room.capacity === 2 ? (
-          <>
-            <Icon color={selected} clicked={clicked} />
-            <Icon />
-          </>
-        ) : (
-          <>
-            <Icon color={selected} clicked={clicked} />
-            <Icon />
-            <Icon />
-          </>
-        )}
+        <Icon id={room.room.id} size={room.room.capacity} color={selected} clicked={clicked} />
+        <Icon />
       </RoomVacancy>
     </RoomUnitWrapper>
   );

@@ -21,7 +21,6 @@ export default function Hotel() {
   const { ticket } = useTicket();
   const { Booking } = useBooking();
   const token = useToken();
-
   useEffect(() => {
     if (Booking) {
       if (Booking.Room.capacity === 1) {
@@ -71,7 +70,7 @@ export default function Hotel() {
         </Wrapper>
       ) : (
         <>
-          {ticket.TicketType.includesHotel !== true ? (
+          {ticket.TicketType.isRemote === true ? (
             <Wrapper>
               <MessageWrapper>
                 <p> Sua modalidade de ingresso não inclui hospedagem. Prossiga para a escolha de atividades </p>

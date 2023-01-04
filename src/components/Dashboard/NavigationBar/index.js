@@ -8,7 +8,6 @@ import NavigationButton from './NavigationButton';
 
 export default function NavigationBar() {
   const { getPaymentData } = useGetPayment();
-  console.log(getPaymentData?.id);
 
   return (
     <Container>
