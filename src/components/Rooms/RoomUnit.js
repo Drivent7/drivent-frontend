@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import styled from 'styled-components';
 import useToken from '../../hooks/useToken.js';
 import { useContextPayment } from '../Payment/useContextPayment.js';
@@ -7,17 +7,15 @@ import Icon from './Icon.js';
 export default function RoomUnit(room) {
   const token = useToken();
   const [selected, setSelected] = useState('#CECECE');
-  const [selectedIcon, setSelectedIcon] = useState('#000');
   const [clicked, setClicked] = useState(false);
 
   const { roomId, setRoomId } = useContext(useContextPayment);
 
-  function changeSelected(id) {
+  function changeSelected(id, room) {
     if (selected === '#CECECE') {
       setSelected('#FFEED2');
     }
     setRoomId(id);
-    console.log(clicked);
   }
 
   return (
@@ -30,22 +28,10 @@ export default function RoomUnit(room) {
       selected={roomId}
       id={room.room.id}
     >
-      <RoomNumber>{room.room.name}</RoomNumber>
+      <RoomNumber>{room.room.capacity}</RoomNumber>
       <RoomVacancy>
-        {room.room.capacity === 1 ? (
-          <Icon color={selected} clicked={clicked} />
-        ) : room.room.capacity === 2 ? (
-          <>
-            <Icon color={selected} clicked={clicked} />
-            <Icon />
-          </>
-        ) : (
-          <>
-            <Icon color={selected} clicked={clicked} />
-            <Icon />
-            <Icon />
-          </>
-        )}
+        <Icon id={room.room.id} size={room.room.capacity} booking={room.room.Booking} color={selected} clicked={clicked} />
+        <Icon />
       </RoomVacancy>
     </RoomUnitWrapper>
   );
