@@ -1,119 +1,80 @@
-import { useState, useRef } from 'react';
-import { useEffect } from 'react';
 import styled from 'styled-components';
-import useToken from '../../hooks/useToken.js';
-import * as BookingApi from '../../services/bookingApi';
-export default function RoomUnit({ id, size, color, clicked }) {
-  const token = useToken();
+export default function RoomUnit({ id, size, booking, color, clicked }) {
   const value = size;
-  const [r, setR] = useState();
-  useEffect(() => {
-    BookingApi.getBookings(id, token)
-      .then((a) => {
-        a.bookings?.map((v) => {
-          if (!v[0]) {
-            setR(a);
-          }
-        });
-      })
-      .catch((r) => {});
-  }, []);
-  console.log(r);
-  function godHelpUs(r) {
-    if (value === 1 && r?.bookings[0]?.roomId === id && r?.count === 0) {
+  const bookingQuantity = booking?.length;
+  function acomodation(value, bookingQuantity) {
+    if (value === 1 && bookingQuantity === 1) {
       return (
-        <Icon color={color}>
-          <ion-icon name="person-outline"></ion-icon>
-        </Icon>
-      );
-    } else if (value === 1 && r?.bookings[0]?.roomId === id && r?.count === 1) {
-      return (
-        <Icon color={color}>
+        <Icon color={color} disable="1">
           <ion-icon name="person"></ion-icon>
         </Icon>
       );
-    } else if (value === 2 && r?.bookings[0]?.roomId === id && r?.count === 0) {
+    } else if (value === 1 && bookingQuantity === 0) {
       return (
-        <Icon color={color}>
+        <Icon color={color} clicked={clicked}>
+          <ion-icon name="person-outline"></ion-icon>
+        </Icon>
+      );
+    } else if (value === 2 && bookingQuantity === 0) {
+      return (
+        <Icon color={color} clicked={clicked}>
           <ion-icon name="person-outline"></ion-icon>
           <ion-icon name="person-outline"></ion-icon>
         </Icon>
       );
-    } else if (value === 2 && r?.bookings[0]?.roomId === id && r?.count === 1) {
+    } else if (value === 2 && bookingQuantity === 1) {
       return (
-        <Icon color={color}>
-          <ion-icon name="person"></ion-icon>
+        <Icon color={color} clicked={clicked}>
           <ion-icon name="person-outline"></ion-icon>
+          <ion-icon props="3" name="person"></ion-icon>
         </Icon>
       );
-    } else if (value === 2 && r?.bookings[0]?.roomId === id && r?.count === 2) {
+    } else if (value === 2 && bookingQuantity === 2) {
       return (
-        <Icon color={color}>
+        <Icon color={color} disable="1">
           <ion-icon name="person"></ion-icon>
           <ion-icon name="person"></ion-icon>
         </Icon>
       );
-    } else if (value === 3 && r?.bookings[0]?.roomId === id && r?.count === 0) {
+    } else if (value === 3 && bookingQuantity === 0) {
       return (
-        <Icon color={color}>
+        <Icon color={color} clicked={clicked}>
           <ion-icon name="person-outline"></ion-icon>
           <ion-icon name="person-outline"></ion-icon>
           <ion-icon name="person-outline"></ion-icon>
         </Icon>
       );
-    } else if (value === 3 && r?.bookings[0]?.roomId === id && r?.count === 1) {
+    } else if (value === 3 && bookingQuantity === 1) {
       return (
-        <Icon color={color}>
-          <ion-icon name="person"></ion-icon>
+        <Icon color={color} clicked={clicked}>
+          <ion-icon props="3" name="person="></ion-icon>
           <ion-icon name="person-outline"></ion-icon>
           <ion-icon name="person-outline"></ion-icon>
         </Icon>
       );
-    } else if (value === 3 && r?.bookings[0]?.roomId === id && r?.count === 2) {
+    } else if (value === 3 && bookingQuantity === 2) {
       return (
-        <Icon color={color}>
-          <ion-icon name="person"></ion-icon>
-          <ion-icon name="person"></ion-icon>
+        <Icon color={color} clicked={clicked}>
+          <ion-icon props="3" name="person="></ion-icon>
+          <ion-icon props="3" name="person"></ion-icon>
           <ion-icon name="person-outline"></ion-icon>
         </Icon>
       );
-    } else if (value === 3 && r?.bookings[0]?.roomId === id && r?.count === 3) {
+    } else if (value === 3 && bookingQuantity === 3) {
       return (
-        <Icon color={color}>
-          <ion-icon name="person"></ion-icon>
+        <Icon color={color} disable="1">
+          <ion-icon name="person="></ion-icon>
           <ion-icon name="person"></ion-icon>
           <ion-icon name="person"></ion-icon>
         </Icon>
       );
     }
   }
-  // function acomodation(value) {
-  //   if (value === 1) {
-  //     return (
-  //       <Icon color={color}>
-  //         <ion-icon name="person-outline"></ion-icon>
-  //       </Icon>
-  //     );
-  //   } else if (value === 2) {
-  //     return (
-  //       <Icon color={color}>
-  //         <ion-icon name="person-outline"></ion-icon>
-  //         <ion-icon name="person-outline"></ion-icon>
-  //       </Icon>
-  //     );
-  //   } else if (value === 3) {
-  //     return (
-  //       <Icon color={color}>
-  //         <ion-icon name="person-outline"></ion-icon>
-  //         <ion-icon name="person-outline"></ion-icon>
-  //         <ion-icon name="person-outline"></ion-icon>
-  //       </Icon>
-  //     );
-  //   }
-  // }
-  return <>{godHelpUs(r)}</>;
+  return <>{acomodation(value, bookingQuantity)}</>;
 }
 
 const Icon = styled.div`
-  color: ${(props) => (props.clicked === true ? '#000' : '#000')};
+  color: ${(props) => (props.clicked === true ? 'red' : '#000')};
+  pointer-events: ${(props) => (props.disable === '1' ? 'none' : 'auto')};
+  opacity: ${(props) => (props.disable === '1' ? '0.6' : 'none')};
 `;

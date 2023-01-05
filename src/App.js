@@ -42,7 +42,7 @@ export default function App() {
               roomId,
               setRoomId,
               total,
-              setTotal
+              setTotal,
             }}
           >
             <Router>
