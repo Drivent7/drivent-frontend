@@ -24,6 +24,7 @@ export default function App() {
   const [hotelId, setHotelId] = useState(0);
   const [roomId, setRoomId] = useState(0);
   const [total, setTotal] = useState(0);
+  const [dis, setDis] = useState(1);
   return (
     <>
       <ToastContainer />
@@ -43,6 +44,8 @@ export default function App() {
               setRoomId,
               total,
               setTotal,
+              dis,
+              setDis
             }}
           >
             <Router>

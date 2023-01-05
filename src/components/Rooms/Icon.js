@@ -74,7 +74,17 @@ export default function RoomUnit({ id, size, booking, color, clicked }) {
 }
 
 const Icon = styled.div`
-  color: ${(props) => (props.clicked === true ? 'red' : '#000')};
+  width: 200px;
+  height: 50px;
+  position: absolute;
+  left: 0;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  z-index: 1;
   pointer-events: ${(props) => (props.disable === '1' ? 'none' : 'auto')};
+  background-color: ${(props) => (props.disable === '1' ? '#141116' : '')};
   opacity: ${(props) => (props.disable === '1' ? '0.6' : 'none')};
+  border: 1px solid #000;
+  border-radius: 5px;
 `;

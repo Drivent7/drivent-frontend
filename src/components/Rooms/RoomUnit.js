@@ -3,21 +3,26 @@ import styled from 'styled-components';
 import useToken from '../../hooks/useToken.js';
 import { useContextPayment } from '../Payment/useContextPayment.js';
 import Icon from './Icon.js';
-
 export default function RoomUnit(room) {
   const token = useToken();
   const [selected, setSelected] = useState('#CECECE');
   const [clicked, setClicked] = useState(false);
-
   const { roomId, setRoomId } = useContext(useContextPayment);
-
+  const [colors, setColors] = useState('#000');
+  const [toggle, setToggle] = useState(false);
   function changeSelected(id, room) {
     if (selected === '#CECECE') {
       setSelected('#FFEED2');
+      setColors('red');
+      setToggle(!toggle);
+    } else {
+      setSelected('#fff');
+      setColors('#000');
+      setToggle(!toggle);
     }
     setRoomId(id);
   }
-
+  console.log(roomId);
   return (
     <RoomUnitWrapper
       onClick={() => {
@@ -27,16 +32,24 @@ export default function RoomUnit(room) {
       color={selected}
       selected={roomId}
       id={room.room.id}
+      toggle={toggle}
     >
       <RoomNumber>{room.room.capacity}</RoomNumber>
       <RoomVacancy>
-        <Icon id={room.room.id} size={room.room.capacity} booking={room.room.Booking} color={selected} clicked={clicked} />
+        <Icon
+          id={room.room.id}
+          size={room.room.capacity}
+          booking={room.room.Booking}
+          color={selected}
+          clicked={clicked}
+          selected={roomId}
+        />
         <Icon />
       </RoomVacancy>
     </RoomUnitWrapper>
   );
 }
-const RoomUnitWrapper = styled.div`
+const RoomUnitWrapper = styled.button`
   display: flex;
   justify-content: space-between;
   padding: 0 10px;
@@ -46,8 +59,13 @@ const RoomUnitWrapper = styled.div`
   border-radius: 5px;
   margin: 10px 5px;
   cursor: pointer;
+  position: relative;
 
   background-color: ${(props) => (props.id === props.selected ? '#FFEED2' : '#FFF')};
+
+  div {
+    color: ${(props) => (props.id === props.selected ? 'red' : '#000')};
+  }
 `;
 const RoomNumber = styled.p`
   display: flex;

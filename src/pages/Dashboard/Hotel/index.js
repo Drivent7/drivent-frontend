@@ -106,7 +106,7 @@ export default function Hotel() {
 
                   <div>
                     <RoomWrapper>
-                      <Text>Ótima pedida.Escolha o quarto do hotel!</Text>
+                      <Text>Ótima pedida. Escolha o quarto do hotel!</Text>
                       <div>
                         <RoomCard />
                       </div>
