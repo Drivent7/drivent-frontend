@@ -10,7 +10,7 @@ import image from '../../../assets/images/green.png';
 
 export default function CardPayment() {
   const { ticket } = useTicket();
-  const { finalPayment } = useContext(useContextPayment);
+  const { finalPayment, total } = useContext(useContextPayment);
 
   function complement(ticket) {
     if (ticket?.TicketType.name === 'Sem Hotel' || ticket?.TicketType.name === 'Com Hotel') {
@@ -29,7 +29,7 @@ export default function CardPayment() {
             {complement(ticket)}
             {ticket?.TicketType.name}
           </h1>
-          <h2>R$ {ticket?.TicketType.price}</h2>
+          <h2>R$ {total}</h2>
         </header>
         <p>Pagamento</p>
         <section>

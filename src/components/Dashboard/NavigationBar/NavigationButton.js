@@ -1,11 +1,12 @@
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
-export default function NavigationButton({ active, children }) {
-  return (
-    <Button active={active}>
-      {children}
-    </Button>
-  );
+export default function NavigationButton({ value, children }) {
+  const navigate = useNavigate();
+  function navigation(value) {
+    navigate(`/dashboard/${value}`);
+  }
+  return <Button onClick={() => navigation(value)}>{children}</Button>;
 }
 
 const Button = styled.button`
@@ -19,7 +20,7 @@ const Button = styled.button`
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  ${props => props.active ? 'background-color: #ccc;' : ''}
+  ${(props) => (props.active ? 'background-color: #ccc;' : '')}
 
   &:hover {
     background-color: #ccc;
