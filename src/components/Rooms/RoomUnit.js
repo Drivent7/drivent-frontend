@@ -22,7 +22,6 @@ export default function RoomUnit(room) {
     }
     setRoomId(id);
   }
-  console.log(roomId);
   return (
     <RoomUnitWrapper
       onClick={() => {
