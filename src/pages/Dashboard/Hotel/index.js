@@ -63,7 +63,7 @@ export default function Hotel() {
 
   return (
     <>
-      {!ticket || ticket.status !== 'PAID' ? (
+      {!ticket || ticket?.status !== 'PAID' ? (
         <Wrapper>
           <MessageWrapper>
             <p> Você precisa ter confirmado pagamento antes de fazer a escolha de hospedagem </p>
@@ -71,7 +71,7 @@ export default function Hotel() {
         </Wrapper>
       ) : (
         <>
-          {ticket.TicketType.includesHotel !== true ? (
+          {ticket?.TicketType.includesHotel !== true ? (
             <Wrapper>
               <MessageWrapper>
                 <p> Sua modalidade de ingresso não inclui hospedagem. Prossiga para a escolha de atividades </p>
