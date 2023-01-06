@@ -3,13 +3,15 @@ import useTicket from '../../../hooks/api/useTicket.js';
 import Hotels from '../../../components/Hotel/index.js';
 import RoomCard from '../../../components/Rooms/RoomCard.js';
 import HotelHeader from '../../../components/HeaderHotels.js';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 
 import useBooking from '../../../hooks/api/useBooking.js';
 import useToken from '../../../hooks/useToken.js';
 import { getHotelRooms } from '../../../services/hotelApi.js';
 import { useEffect } from 'react';
-import { getBookings } from '../../../services/bookingApi.js';
+import { getBookings, postBookings } from '../../../services/bookingApi.js';
+import { useContextPayment } from '../../../components/Payment/useContextPayment.js';
+import usePostBooking from '../../../hooks/api/postBooking.js';
 
 export default function Hotel() {
   const [roomReserved, setRoomReserved] = useState(false);
@@ -17,10 +19,12 @@ export default function Hotel() {
   const [hotel, setHotel] = useState();
   const [reserves, setReserves] = useState();
   const [inRoom, setInRoom] = useState('');
-
+  const { roomId, setRoomId } = useContext(useContextPayment);
   const { ticket } = useTicket();
   const { Booking } = useBooking();
+  const { postBookingAct, postBookingData } = usePostBooking();
   const token = useToken();
+  const [toggle, setToggle] = useState(0);
   useEffect(() => {
     if (Booking) {
       if (Booking.Room.capacity === 1) {
@@ -50,55 +54,66 @@ export default function Hotel() {
         })
         .catch((r) => {});
     }
-  }, [Booking, roomReserved]);
-
-  function toggleScreen() {
+  }, [Booking, roomReserved, toggle]);
+  async function toggleScreen() {
     setRoomReserved(false);
+    try {
+      if (roomId === 0) {
+        throw new Error('Deu erro dog');
+      }
+      const body = { roomId: roomId };
+      await postBookingAct(body);
+      window.location.reload();
+    } catch (error) {
+      console.log(error);
+    }
   }
-
+  useEffect(() => {}, [postBookingData, Booking]);
   async function roomCancelled(bookingId = 1) {
     setRoomReserved(true);
   }
 
   return (
     <>
-      {!ticket || ticket.status !== 'PAID' ? (
-        <Wrapper>
-          <MessageWrapper>
-            <p> Você precisa ter confirmado pagamento antes de fazer a escolha de hospedagem </p>
-          </MessageWrapper>
-        </Wrapper>
+      {Booking ? (
+        <>
+          <div>
+            <Text>Você já escolheu seu Quarto:</Text>
+            <HotelCardResume>
+              <img src={hotel?.image} alt={hotel?.name} />
+              <HotelTitle>
+                <h4>{hotel?.name}</h4>
+              </HotelTitle>
+              <RoomReserved>
+                <h4>Quarto reservado</h4>
+                <p>
+                  {Booking?.Room.name}, {roomType}
+                </p>
+              </RoomReserved>
+              <PeopleInTheRoom>
+                <h4>Pessoas no seu quarto</h4>
+                <p>Você {inRoom}</p>
+              </PeopleInTheRoom>
+            </HotelCardResume>
+            <Button onClick={roomCancelled}>Trocar de quarto</Button>
+          </div>
+        </>
       ) : (
         <>
-          {ticket.TicketType.isRemote === true ? (
+          {!ticket || ticket.status !== 'PAID' ? (
             <Wrapper>
               <MessageWrapper>
-                <p> Sua modalidade de ingresso não inclui hospedagem. Prossiga para a escolha de atividades </p>
+                <p> Você precisa ter confirmado pagamento antes de fazer a escolha de hospedagem </p>
               </MessageWrapper>
             </Wrapper>
           ) : (
             <>
-              {Booking ? (
-                <div>
-                  <Text>Você já escolheu seu Quarto:</Text>
-                  <HotelCardResume>
-                    <img src={hotel?.image} alt={hotel?.name} />
-                    <HotelTitle>
-                      <h4>{hotel?.name}</h4>
-                    </HotelTitle>
-                    <RoomReserved>
-                      <h4>Quarto reservado</h4>
-                      <p>
-                        {Booking?.Room.name}, {roomType}
-                      </p>
-                    </RoomReserved>
-                    <PeopleInTheRoom>
-                      <h4>Pessoas no seu quarto</h4>
-                      <p>Você {inRoom}</p>
-                    </PeopleInTheRoom>
-                  </HotelCardResume>
-                  <Button onClick={roomCancelled}>Trocar de quarto</Button>
-                </div>
+              {ticket.TicketType.isRemote === true ? (
+                <Wrapper>
+                  <MessageWrapper>
+                    <p> Sua modalidade de ingresso não inclui hospedagem. Prossiga para a escolha de atividades </p>
+                  </MessageWrapper>
+                </Wrapper>
               ) : (
                 <>
                   <HotelHeader />
