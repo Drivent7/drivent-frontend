@@ -28,3 +28,13 @@ export async function postBookings(body, token) {
 
   return response.data;
 }
+
+export async function deleteBookings(token) {
+  const response = await api.delete('/booking', {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  return response.data;
+}
