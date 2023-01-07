@@ -38,23 +38,21 @@ export default function GitHubButton() {
 
   async function handleSignIn(e) {
     e.preventDefault();
-    console.log('click');
     const signIn = signInWithGithub();
 
     signIn
       .then((r) => {
-        // console.log(r.user);
         const token = r.user.accessToken;
         const email = r.user.email;
         const userData = signInWithGitHubApi(email, token)
           .then((res) => {
             console.log(res);
             setUserData(res);
+            navigate('/dashboard');
           })
           .catch((error) => {
             console.log(error);
           });
-        navigate('/dashboard');
       })
       .catch((error) => {
         console.log(error);
