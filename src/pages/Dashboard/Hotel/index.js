@@ -75,7 +75,6 @@ export default function Hotel() {
       console.log(error);
     }
   }
-  console.log(Booking?.id);
   return (
     <>
       {Booking ? (
