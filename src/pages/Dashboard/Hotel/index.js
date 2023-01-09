@@ -4,8 +4,8 @@ import Hotels from '../../../components/Hotel/index.js';
 import RoomCard from '../../../components/Rooms/RoomCard.js';
 import HotelHeader from '../../../components/HeaderHotels.js';
 import { useState, useContext } from 'react';
-
 import useBooking from '../../../hooks/api/useBooking.js';
+import { deleteBookings } from '../../../services/bookingApi.js';
 import useToken from '../../../hooks/useToken.js';
 import { getHotelRooms } from '../../../services/hotelApi.js';
 import { useEffect } from 'react';
@@ -25,6 +25,14 @@ export default function Hotel() {
   const { postBookingAct, postBookingData } = usePostBooking();
   const token = useToken();
   const [toggle, setToggle] = useState(0);
+
+  function changeRoom() {
+    deleteBookings(token).then((r) => {
+      window.location.reload();
+    }).catch((r) => {
+    });
+  }
+
   useEffect(() => {
     if (Booking) {
       if (Booking.Room.capacity === 1) {
@@ -56,7 +64,6 @@ export default function Hotel() {
     }
   }, [Booking, roomReserved, toggle]);
   async function toggleScreen() {
-    setRoomReserved(false);
     try {
       if (roomId === 0) {
         throw new Error('Deu erro dog');
@@ -68,11 +75,6 @@ export default function Hotel() {
       console.log(error);
     }
   }
-  useEffect(() => {}, [postBookingData, Booking]);
-  async function roomCancelled(bookingId = 1) {
-    setRoomReserved(true);
-  }
-
   return (
     <>
       {Booking ? (
@@ -95,7 +97,7 @@ export default function Hotel() {
                 <p>Você {inRoom}</p>
               </PeopleInTheRoom>
             </HotelCardResume>
-            <Button onClick={roomCancelled}>Trocar de quarto</Button>
+            <Button onClick={changeRoom}>Trocar de quarto</Button>
           </div>
         </>
       ) : (
