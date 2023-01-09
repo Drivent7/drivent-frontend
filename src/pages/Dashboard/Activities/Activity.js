@@ -1,16 +1,24 @@
 import styled from 'styled-components';
 import { BiLogIn } from 'react-icons/bi';
 import { CiCircleRemove } from 'react-icons/ci';
+import { useState } from 'react';
 
 export default function Activity(props) {
-  // console.log(props);
-  // const vagas = 1;
+  const [selected, setSelected] = useState(false);
+
   return (
     <>
-      <ActivityBox key={props.key} time={props.iten.endsAt - props.iten.startsAt}>
+      <ActivityBox
+        onClick={() => setSelected(!selected)}
+        key={props.key}
+        time={props.iten.endsAt - props.iten.startsAt}
+        selected={selected}
+      >
         <TextBox>
           <h2>{props.iten.title}</h2>
-          <p>{props.iten.startsAt}h - {props.iten.endsAt}h </p>
+          <p>
+            {props.iten.startsAt}h - {props.iten.endsAt}h{' '}
+          </p>
         </TextBox>
 
         <Vertical></Vertical>
@@ -37,6 +45,7 @@ const ActivityBox = styled.div`
   margin: 5px;
   border-radius: 5px;
   background-color: #f1f1f1;
+  background-color: ${(props) => (props.selected === true ? '#D0FFDB' : '#f1f1f1')};
 
   display: flex;
   justify-content: space-around;
@@ -53,13 +62,13 @@ const TextBox = styled.div`
   align-items: flex-start;
   justify-content: flex-start;
 
-  h2{
+  h2 {
     font-size: 13px;
     font-weight: 700;
     margin-bottom: 10px;
   }
 
-  p{
+  p {
     font-size: 12px;
     font-weight: 300;
   }

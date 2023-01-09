@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import useEvent from '../../../hooks/api/useEvent';
 import useTicket from '../../../hooks/api/useTicket';
 import Button from '../../../components/ticket/Button';
