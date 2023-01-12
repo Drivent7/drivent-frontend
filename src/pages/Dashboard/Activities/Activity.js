@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { BiLogIn } from 'react-icons/bi';
 import { CiCircleRemove } from 'react-icons/ci';
 import { useState } from 'react';
+import dayjs from 'dayjs';
 
 export default function Activity(props) {
   const [selected, setSelected] = useState(false);
@@ -11,13 +12,13 @@ export default function Activity(props) {
       <ActivityBox
         onClick={() => setSelected(!selected)}
         key={props.key}
-        time={props.iten.endsAt - props.iten.startsAt}
+        time={dayjs(props.iten.endsAt).format('HH') - dayjs(props.iten.startsAt).format('HH')}
         selected={selected}
       >
         <TextBox>
           <h2>{props.iten.title}</h2>
           <p>
-            {props.iten.startsAt}h - {props.iten.endsAt}h{' '}
+            {dayjs(props.iten.startsAt).format('HH:mm')}h - {dayjs(props.iten.endsAt).format('HH:mm')}h{' '}
           </p>
         </TextBox>
 
