@@ -23,7 +23,7 @@ export default function Activity(props) {
         </TextBox>
 
         <Vertical></Vertical>
-        {props.iten.vagas > 0 ? (
+        {props.iten.Reservations < props.iten.capacity ? (
           <Button color={'green'}>
             <BiLogIn size={30} />
             <p>{props.iten.vagas} vagas</p>

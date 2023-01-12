@@ -60,8 +60,8 @@ export default function IndexAllowed() {
           ) : (
             <ActivitiesWrapper>
               <h1>Escolha de atividades</h1>
-              {days.map((day, index) => {
-                return <Button key={index}>{day}</Button>;
+              {days.map((iten, index) => {
+                return <Button onClick={() => setDay(iten)}>{iten}</Button>;
               })}
               <ScheduleHeader>
                 <p>Auditório principal</p>
@@ -72,6 +72,7 @@ export default function IndexAllowed() {
                 <DayBox>
                   {activities
                     .filter((iten) => iten.location === 'Auditório principal')
+                    .filter((iten) => dayjs(iten.dateEntity).format('dddd DD/MM') === day)
                     .map((iten, index) => (
                       <Activity key={index} iten={iten} />
                     ))}
@@ -79,6 +80,7 @@ export default function IndexAllowed() {
                 <DayBox>
                   {activities
                     .filter((iten) => iten.location === 'Auditório lateral')
+                    .filter((iten) => dayjs(iten.dateEntity).format('dddd DD/MM') === day)
                     .map((iten, index) => (
                       <Activity key={index} iten={iten} />
                     ))}
@@ -86,6 +88,7 @@ export default function IndexAllowed() {
                 <DayBox>
                   {activities
                     .filter((iten) => iten.location === 'Sala de workshop')
+                    .filter((iten) => dayjs(iten.dateEntity).format('dddd DD/MM') === day)
                     .map((iten, index) => (
                       <Activity key={index} iten={iten} />
                     ))}
