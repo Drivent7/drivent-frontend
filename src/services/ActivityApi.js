@@ -8,3 +8,21 @@ export async function getActivities(token) {
   });
   return response.data;
 }
+
+export async function makeReservation(activityId, token) {
+  const response = await api.post(`/activity/${activityId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+}
+
+export async function deleteReservation(activityId, token) {
+  const response = await api.delete(`/activity/${activityId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+}

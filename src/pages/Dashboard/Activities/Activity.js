@@ -13,7 +13,6 @@ export default function Activity(props) {
   const { activityId, setActivityId } = useContext(useContextPayment);
 
   function handleClick(id, time) {
-    console.log(id, time, activityId);
     setActivityId(id);
     if (id !== activityId) {
       setActivityId(id);
