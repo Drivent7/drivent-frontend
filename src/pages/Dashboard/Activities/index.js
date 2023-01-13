@@ -7,7 +7,7 @@ export default function Activities() {
   useEffect(() => {}, [getPaymentData]);
   return (
     <>
-      {getPaymentData ? (
+      {!getPaymentData ? (
         <IndexAllowed />
       ) : (
         <None>Você precisa ter confirmado pagamento antes de fazer a escolha de atividades</None>
