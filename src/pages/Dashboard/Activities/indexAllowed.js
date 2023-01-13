@@ -5,13 +5,27 @@ import Button from '../../../components/ticket/Button';
 import None from '../../../components/Payment/None';
 import styled from 'styled-components';
 import Activity from './Activity';
+import useToken from '../../../hooks/useToken';
+import { getActivities } from '../../../services/ActivityApi';
+import dayjs from 'dayjs';
+
 export default function IndexAllowed() {
   const { ticket } = useTicket();
   const { event } = useEvent();
+  const token = useToken();
+  const [activities, setActivities] = useState([]);
+  const [day, setDay] = useState();
 
-  useEffect(() => {}, [event, ticket]);
-  const start = new Date(event?.startsAt);
-  const daysEvent = start.toLocaleDateString('pt-BR').replaceAll('/2023', '');
+  useEffect(() => {
+    const promise = getActivities(token);
+    promise
+      .then((res) => {
+        setActivities(res);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, [event, ticket]);
 
   // model Activity {
   //   id                 Int      @id @default(autoincrement())
@@ -26,89 +40,63 @@ export default function IndexAllowed() {
   //   @@index([dateEntity])
   // }
 
-  const daysArray = ['05/01', '06/01', '07/01', '08/01'];
-  const ActivitiesArray = [
-    {
-      title: 'Palestra 1',
-      location: 'Auditório principal',
-      capacity: 20,
-      dateEntity: '05/01',
-      startsAt: 9,
-      endsAt: 10,
-      vagas: 15
-    },
-    {
-      title: 'Palestra 11',
-      location: 'Auditório principal',
-      capacity: 20,
-      dateEntity: '05/01',
-      startsAt: 9,
-      endsAt: 10,
-      vagas: 0
-    },
-    {
-      title: 'Palestra 2',
-      location: 'Auditório lateral',
-      capacity: 20,
-      dateEntity: '05/01',
-      startsAt: 9,
-      endsAt: 11,
-      vagas: 0
-    },
-    {
-      title: 'Palestra 22',
-      location: 'Auditório lateral',
-      capacity: 20,
-      dateEntity: '05/01',
-      startsAt: 9,
-      endsAt: 10,
-      vagas: 2
-    },
-    {
-      title: 'Palestra 3',
-      location: 'Sala de workshop',
-      capacity: 20,
-      dateEntity: '05/01',
-      startsAt: 9,
-      endsAt: 10,
-      vagas: 10
-    },
-  ];
+  let days = activities.map((iten) => {
+    return dayjs(iten.dateEntity).format('dddd DD/MM');
+  });
+  days = days.filter((iten, index) => {
+    return days.indexOf(iten) === index;
+  });
+
   return (
     <>
-      {ticket?.TicketType.isRemote ? (
-        <None>
-          Sua modalidade de ingresso não necessita escolher atividade. Você terá acesso a todas as atividades.
-        </None>
+      {!activities ? (
+        <> loading... </>
       ) : (
-        <ActivitiesWrapper>
-          <h1>Escolha de atividades</h1>
-          {daysArray.map((day, index) => {
-            return <Button key={index}>{day}</Button>;
-          })}
-          <ScheduleHeader>
-            <p>Auditório principal</p>
-            <p>Auditório lateral</p>
-            <p>Sala de workshop</p>
-          </ScheduleHeader>
-          <Schedule>
-            <DayBox>
-              {ActivitiesArray.filter((iten) => iten.location === 'Auditório principal').map((iten, index) => (
-                <Activity key={index} time={iten.endsAt - iten.startsAt} iten={iten} />
-              ))}
-            </DayBox>
-            <DayBox>
-              {ActivitiesArray.filter((iten) => iten.location === 'Auditório lateral').map((iten, index) => (
-                <Activity key={index} time={iten.endsAt - iten.startsAt} iten={iten} />
-              ))}
-            </DayBox>
-            <DayBox>
-              {ActivitiesArray.filter((iten) => iten.location === 'Sala de workshop').map((iten, index) => (
-                <Activity key={index} time={iten.endsAt - iten.startsAt} iten={iten} />
-              ))}
-            </DayBox>
-          </Schedule>
-        </ActivitiesWrapper>
+        <>
+          {ticket?.TicketType.isRemote ? (
+            <None>
+              Sua modalidade de ingresso não necessita escolher atividade. Você terá acesso a todas as atividades.
+            </None>
+          ) : (
+            <ActivitiesWrapper>
+              <h1>Escolha de atividades</h1>
+              {days.map((iten, index) => {
+                return <Button onClick={() => setDay(iten)}>{iten}</Button>;
+              })}
+              <ScheduleHeader>
+                <p>Auditório principal</p>
+                <p>Auditório lateral</p>
+                <p>Sala de workshop</p>
+              </ScheduleHeader>
+              <Schedule>
+                <DayBox>
+                  {activities
+                    .filter((iten) => iten.location === 'Auditório principal')
+                    .filter((iten) => dayjs(iten.dateEntity).format('dddd DD/MM') === day)
+                    .map((iten, index) => (
+                      <Activity key={index} iten={iten} />
+                    ))}
+                </DayBox>
+                <DayBox>
+                  {activities
+                    .filter((iten) => iten.location === 'Auditório lateral')
+                    .filter((iten) => dayjs(iten.dateEntity).format('dddd DD/MM') === day)
+                    .map((iten, index) => (
+                      <Activity key={index} iten={iten} />
+                    ))}
+                </DayBox>
+                <DayBox>
+                  {activities
+                    .filter((iten) => iten.location === 'Sala de workshop')
+                    .filter((iten) => dayjs(iten.dateEntity).format('dddd DD/MM') === day)
+                    .map((iten, index) => (
+                      <Activity key={index} iten={iten} />
+                    ))}
+                </DayBox>
+              </Schedule>
+            </ActivitiesWrapper>
+          )}
+        </>
       )}
     </>
   );
@@ -157,4 +145,3 @@ const DayBox = styled.div`
   flex-direction: column;
   align-items: center;
 `;
-
