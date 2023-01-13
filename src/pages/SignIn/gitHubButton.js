@@ -43,7 +43,7 @@ export default function GitHubButton() {
     signIn
       .then((r) => {
         const token = r.user.accessToken;
-        const email = r.user.email;
+        const email = r.user?.email;
         const userData = signInWithGitHubApi(email, token)
           .then((res) => {
             console.log(res);
