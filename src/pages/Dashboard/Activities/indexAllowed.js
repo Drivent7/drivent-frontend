@@ -27,19 +27,6 @@ export default function IndexAllowed() {
       });
   }, [event, ticket]);
 
-  // model Activity {
-  //   id                 Int      @id @default(autoincrement())
-  //   title              String   @db.VarChar(255)
-  //   location           String   @db.VarChar(255)
-  //   capacity           Int
-  //   dateEntity         DateTime @db.Date()
-  //   startsAt           DateTime
-  //   endsAt             DateTime
-  //   createdAt          DateTime @default(now())
-  //   updatedAt          DateTime @updatedAt
-  //   @@index([dateEntity])
-  // }
-
   let days = activities.map((iten) => {
     return dayjs(iten.dateEntity).format('dddd DD/MM');
   });

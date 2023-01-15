@@ -2,41 +2,61 @@ import styled from 'styled-components';
 import { BiLogIn } from 'react-icons/bi';
 import { BiCheckCircle } from 'react-icons/bi';
 import { CiCircleRemove } from 'react-icons/ci';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import { useContextPayment } from '../../../components/Payment/useContextPayment';
 
 export default function Activity(props) {
-  // const [selected, setSelected] = useState(false);
-  // const [registered, setRegistered] = useState(false);
-  const { registered, setRegistered } = useContext(useContextPayment);
-  const { activityId, setActivityId } = useContext(useContextPayment);
+  const { listOfActivities, setListOfActivities } = useContext(useContextPayment);
+  const [render, setRender] = useState(false);
 
-  function handleClick(id, time) {
-    setActivityId(id);
-    if (id !== activityId) {
-      setActivityId(id);
-    }
-    if (id === activityId) {
-      setRegistered(!registered);
-      setActivityId(id);
+  useEffect(() => {}, [listOfActivities, render]);
+
+  function unsubscribe(index) {
+    listOfActivities.splice(index, 1);
+    setRender(!render);
+  }
+
+  function handleClick(newId, startsAt, endsAt, day) {
+    if (!(props.iten.Reservations.length < props.iten.capacity)) {
       return;
     }
-    // if (activityId === id && registered === true) {
-    //   setActivityId(id);
-    //   return;
-    // }
-    // setSelected(!selected);
+    if (listOfActivities.length === 0) {
+      setListOfActivities((prev) => [...prev, props.iten]);
+      return;
+    }
+    for (let i = 0; i < listOfActivities.length; i++) {
+      let id = listOfActivities[i].id;
+      let start = dayjs(listOfActivities[i].startsAt).format('HH:MM');
+      let end = dayjs(listOfActivities[i].endsAt).format('HH:MM');
+      let dateEntity = dayjs(listOfActivities[i].dateEntity).format('DD/MM');
+
+      if (newId === id) {
+        // criar função delete
+        unsubscribe(i);
+        return;
+      }
+      if (day === dateEntity && startsAt < end && endsAt > start) {
+        return;
+      }
+    }
+    setListOfActivities((prev) => [...prev, props.iten]);
+    setRender(!render);
   }
 
   return (
     <>
       <ActivityBox
-        onClick={() => handleClick(props.iten.id, dayjs(props.iten.startsAt).format('HH:MM'))}
+        onClick={() =>
+          handleClick(
+            props.iten.id,
+            dayjs(props.iten.startsAt).format('HH:MM'),
+            dayjs(props.iten.endsAt).format('HH:MM'),
+            dayjs(props.iten.dateEntity).format('DD/MM'),
+          )
+        }
         time={dayjs(props.iten.endsAt).format('HH') - dayjs(props.iten.startsAt).format('HH')}
-        registered={registered}
-        activityId={activityId}
-        iten={props.iten}
+        reserved={listOfActivities.includes(props.iten) ? true : false}
       >
         <TextBox>
           <h2>{props.iten.title}</h2>
@@ -46,7 +66,7 @@ export default function Activity(props) {
         </TextBox>
 
         <Vertical></Vertical>
-        {registered && activityId === props.iten.id ? (
+        {listOfActivities.includes(props.iten) ? (
           <Button color={'green'}>
             <BiCheckCircle size={30} />
             <p>Inscrito</p>
@@ -77,8 +97,7 @@ const ActivityBox = styled.div`
   margin: 5px;
   border-radius: 5px;
   background-color: #f1f1f1;
-  background-color: ${(props) =>
-    props.registered === true && props.activityId === props.iten.id ? '#D0FFDB' : '#f1f1f1'};
+  background-color: ${(props) => (props.reserved ? '#D0FFDB' : '#f1f1f1')};
 
   display: flex;
   justify-content: space-around;
